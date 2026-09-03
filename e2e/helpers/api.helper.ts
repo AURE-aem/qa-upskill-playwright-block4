@@ -39,7 +39,7 @@ export async function getAdminToken(
       password: adminPassword,
     },
   });
-  
+
 
   if (!response.ok()) {
     throw new Error(

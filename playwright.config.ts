@@ -9,6 +9,8 @@ const appUrl =
 const apiUrl =
   process.env.PUBLIC_API_URL ?? 'http://localhost:4000';
 
+const authFile = 'playwright/.auth/admin.json';
+
 export default defineConfig({
   testDir: './e2e/tests',
 
@@ -40,15 +42,30 @@ export default defineConfig({
 
   projects: [
     {
+      name: 'setup',
+      testMatch: /auth\.setup\.ts/,
+    },
+    {
       name: 'desktop-chrome',
+      testIgnore: /authenticated-dashboard\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
       },
     },
     {
       name: 'mobile-chrome',
+      testIgnore: /authenticated-dashboard\.spec\.ts/,
       use: {
         ...devices['Pixel 7'],
+      },
+    },
+    {
+      name: 'authenticated-chrome',
+      testMatch: /authenticated-dashboard\.spec\.ts/,
+      dependencies: ['setup'],
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: authFile,
       },
     },
   ],

@@ -39,9 +39,6 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Reset test database
-        run: npm run reset-db
-
       - name: Run Playwright tests
         run: npx playwright test
 

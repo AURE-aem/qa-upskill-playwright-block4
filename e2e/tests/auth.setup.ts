@@ -9,7 +9,13 @@ const adminEmail =
   process.env.QA_UPSKILL_ADMIN_EMAIL ?? 'admin@qaupskill.local';
 
 const adminPassword =
-  process.env.QA_UPSKILL_ADMIN_PASSWORD ?? 'Admin123!';
+  process.env.QA_UPSKILL_ADMIN_PASSWORD;
+
+if (!adminPassword) {
+  throw new Error(
+    'QA_UPSKILL_ADMIN_PASSWORD environment variable is required',
+  );
+}
 
 setup('authenticate as admin', async ({ page }) => {
   const loginPage = new LoginPage(page);

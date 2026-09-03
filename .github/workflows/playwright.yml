@@ -19,9 +19,9 @@ jobs:
       PORT: "4000"
       CLIENT_ORIGIN: "http://localhost:4321"
       PUBLIC_API_URL: "http://localhost:4000"
-      JWT_SECRET: "github-actions-test-secret"
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
       QA_UPSKILL_ADMIN_EMAIL: "admin@qaupskill.local"
-      QA_UPSKILL_ADMIN_PASSWORD: "Admin123!"
+      QA_UPSKILL_ADMIN_PASSWORD: ${{ secrets.QA_UPSKILL_ADMIN_PASSWORD }}
 
     steps:
       - name: Checkout repository

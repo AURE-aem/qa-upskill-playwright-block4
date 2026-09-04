@@ -19,44 +19,56 @@ let adminToken = '';
 let testUserId: number | undefined;
 
 test.describe('Dashboard login', () => {
-  test.beforeAll(async ({ request }) => {
-    adminToken = await getAdminToken(request);
+  test.beforeAll(
+    'Arrange: create test user via API',
+    async ({ request }) => {
+      adminToken = await getAdminToken(request);
 
-    testUserId = await createUserViaApi(
-      request,
-      adminToken,
-      testUser,
-    );
-  });
-
-  test.beforeEach(async ({ loginPage }) => {
-    await loginPage.navigate();
-
-    await loginPage.login(
-      testUser.email,
-      testUser.password,
-    );
-  });
-
-  test('dashboard loads after login @smoke', async ({ page }) => {
-    await test.step('Verify authenticated dashboard is visible', async () => {
-      await expect(
-        page.getByRole('heading', { name: testUser.fullName }),
-      ).toBeVisible();
-
-      await expect(
-        page.getByRole('button', { name: 'Logout' }),
-      ).toBeVisible();
-    });
-  });
-
-  test.afterAll(async ({ request }) => {
-    if (testUserId !== undefined && adminToken !== '') {
-      await deleteUserViaApi(
+      testUserId = await createUserViaApi(
         request,
         adminToken,
-        testUserId,
+        testUser,
       );
-    }
+    },
+  );
+
+  test.beforeEach(
+    'Act: log in through the user interface',
+    async ({ loginPage }) => {
+      await loginPage.navigate();
+
+      await loginPage.login(
+        testUser.email,
+        testUser.password,
+      );
+    },
+  );
+
+  test('dashboard loads after login @smoke', async ({ page }) => {
+    await test.step(
+      'Assert: authenticated dashboard is visible',
+      async () => {
+        await expect(
+          page.getByRole('heading', { name: testUser.fullName }),
+        ).toBeVisible();
+
+        await expect(
+          page.getByRole('button', { name: 'Logout' }),
+        ).toBeVisible();
+      },
+    );
   });
+
+  test.afterAll(
+    'Cleanup: delete test user via API',
+    async ({ request }) => {
+      if (testUserId !== undefined && adminToken !== '') {
+        await deleteUserViaApi(
+          request,
+          adminToken,
+          testUserId,
+        );
+      }
+    },
+  );
 });
